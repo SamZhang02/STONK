@@ -1,5 +1,3 @@
-# This example requires the 'message_content' intent.
-
 import discord
 from dotenv import load_dotenv 
 import os 
@@ -24,9 +22,6 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-
-    if message.author.id == 1038921977865457804:
-        await message.channel.send('i am the better bot')
 
     if message.content.startswith('!hello'):
         await message.channel.send('I am Ally\'s unfinished project bot')
