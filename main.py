@@ -29,7 +29,7 @@ async def on_message(message):
     if message.content.startswith('!hello'):
         await message.channel.send('I am Ally\'s unfinished project bot')
     
-    if message.content.startswith == ('!stock'):
+    if message.content.startswith('!stock'):
         stock = Stock('AMD','NASDAQ',69)
         await message.channel.send(embed=stock.get_embed())
 
