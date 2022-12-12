@@ -1,9 +1,9 @@
 import discord
-import time
 from dotenv import load_dotenv 
 import os 
 from pathlib import Path
-from stock import Stock
+from stock import Equity, Index 
+from get_stock_price import get_stock_info
 
 #Get bot key from .env
 load_dotenv()
@@ -25,12 +25,31 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
+    
+    #TODO: put commands in another module
+    # if message.content.startswith('!'):
+    #     run_command()
 
     if message.content.startswith('!hello'):
         await message.channel.send('I am Ally\'s unfinished project bot')
     
-    if message.content.startswith('!stock'):
-        stock = Stock('AMD','NASDAQ',69)
+    if message.content.startswith('!stonk'):
+        content = message.content.split()
+        if len(content) != 2:
+            await message.channel.send('Invalid Command.')
+            return
+        ticker = content[1]
+        
+        stock_info = get_stock_info(ticker)
+        if stock_info['status'] != 'OK':
+            await message.channel.send(stock_info['message'])
+            return
+        
+        if stock_info['quoteType'] == 'INDEX':
+            stock = Index(stock_info['symbol'], stock_info['name'], stock_info['price'])
+        else:
+            stock = Equity(stock_info['symbol'], stock_info['name'], stock_info['price'], stock_info['currency'])
+
         await message.channel.send(embed=stock.get_embed())
 
 client.run(TOKEN)
