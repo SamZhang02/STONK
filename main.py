@@ -2,8 +2,8 @@ import discord
 from dotenv import load_dotenv 
 import os 
 from pathlib import Path
-from stock import Equity, Index 
-from get_stock_price import get_stock_info
+from stock import Equity, Index, MultipleQuotes
+from market_info import get_stock,get_major_index
 
 #Get bot key from .env
 load_dotenv()
@@ -40,16 +40,20 @@ async def on_message(message):
             return
         ticker = content[1]
         
-        stock_info = get_stock_info(ticker)
-        if stock_info['status'] != 'OK':
-            await message.channel.send(stock_info['message'])
+        try:
+            stock = get_stock(ticker) 
+        except Exception as e: 
+            await message.channel.send(str(e))
             return
-        
-        if stock_info['quoteType'] == 'INDEX':
-            stock = Index(stock_info['symbol'], stock_info['name'], stock_info['price'])
-        else:
-            stock = Equity(stock_info['symbol'], stock_info['name'], stock_info['price'], stock_info['currency'])
 
+        if type(stock) == str:
+            await message.channel.send(stock)
+            return
+            
         await message.channel.send(embed=stock.get_embed())
+
+    if message.content.startswith('!market'):
+        indices = get_major_index('Market Right Now')
+        await message.channel.send(embed=indices.get_embed())
 
 client.run(TOKEN)
