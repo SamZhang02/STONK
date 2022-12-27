@@ -7,7 +7,7 @@ def get_stock_info(stock_name:str) -> dict:
     if info['regularMarketPrice'] is None:
         return {
             'status': 'ERROR',
-            'message': 'Ticker does not exist.' 
+            'message': 'There is no currently available price for one or more tickers requested.' 
         }
 
     try:
@@ -26,7 +26,7 @@ def get_stock_info(stock_name:str) -> dict:
             'quoteType': quote_type
         }
 
-    except:
+    except Exception as e:
         return {
             'status': 'ERROR',
             'message': 'Unknown error, ticker information could not be retrieved'
