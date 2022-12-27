@@ -40,14 +40,19 @@ async def on_message(message:discord.Message) -> None:
 
 @tasks.loop(seconds=get_minutes_until_next_close())
 async def notify() -> None:
-    channels = database.get_channels_to_notify()
-    market = get_major_index(f'Market Close - {today_date()}')
-    for channel_id in channels:
-        channel = client.get_channel(channel_id)
-        try:
-            await channel.send(embed=market.get_embed())
-        except:
-            pass
-    notify.change_interval(seconds=get_minutes_until_next_close())
+    if notify.current_loop != 0:
+        channels = database.get_channels_to_notify()
+        market = get_major_index(f'Market Close - {today_date()}')
+        for channel_id in channels:
+            channel = client.get_channel(channel_id)
+            try:
+                await channel.send(embed=market.get_embed())
+            except AttributeError:
+                pass
+            except Exception as e:
+                fobj = open('errors.txt', 'a')
+                fobj.write(str(e))
+                fobj.close()
+        notify.change_interval(seconds=get_minutes_until_next_close())
 
 client.run(TOKEN) # type: ignore
