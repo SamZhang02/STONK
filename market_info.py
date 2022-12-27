@@ -52,7 +52,7 @@ def get_stock(stock_name:str) -> Quote:
         )
     return stock
 
-def get_major_index(title:str) -> list:
+def get_major_index(title:str) -> MultipleQuotes:
     sp500 = get_stock('^GSPC')
     dji = get_stock('^DJI')
     nasdaq = get_stock('^IXIC')
