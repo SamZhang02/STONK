@@ -7,6 +7,7 @@ from commands import run_command
 import database
 from daytime import get_minutes_until_next_close,today_date
 from market_info import get_major_index
+import asyncio
 
 
 #Get bot key from .env
@@ -27,6 +28,7 @@ async def on_ready() -> None:
         database.create_db()
     if notify.is_running():
         notify.cancel()
+        asyncio.sleep(5)
     notify.start()
 
 @client.event
