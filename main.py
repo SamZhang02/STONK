@@ -51,8 +51,6 @@ async def notify() -> None:
             channel = client.get_channel(channel_id)
             try:
                 await channel.send(embed=market.get_embed())
-            except AttributeError:
-                pass
             except Exception as e:
                 fobj = open('errors.txt', 'a')
                 fobj.write(str(e))
