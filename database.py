@@ -1,5 +1,14 @@
 import sqlite3
 
+def create_db() -> None:
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS notify(channel_id INTEGER PRIMARY KEY,to_notify INTEGER DEFAULT 0);")
+
+    conn.commit()
+    conn.close()
+
 def change_notify_status(channel:int) -> bool:
     conn = sqlite3.connect('./database.db')
     cursor = conn.cursor()

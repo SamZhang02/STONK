@@ -23,6 +23,8 @@ client = discord.Client(intents=intents)
 @client.event
 async def on_ready() -> None:
     print(f'Logged in as {client.user}')
+    if not os.path.exists('database.db'):
+        database.create_db()
     notify.start()
 
 @client.event
