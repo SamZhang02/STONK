@@ -9,8 +9,8 @@ Libraries: `pip install -r requirements. txt`
 Database: SQLite3
 
 ## ROADMAP
-- Implement change since open in all embed
-- Implement embed color change depending of whether change since open is positive or negative
+- Implement price change since open in all commands
+- Implement embeds' color change depending of whether change since open is positive or negative
 
 ## COMMANDS
 All commands start with the prefix `stonk`
