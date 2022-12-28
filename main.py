@@ -25,6 +25,8 @@ async def on_ready() -> None:
     print(f'Logged in as {client.user}')
     if not os.path.exists('database.db'):
         database.create_db()
+    if notify.is_running():
+        notify.cancel()
     notify.start()
 
 @client.event
