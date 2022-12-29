@@ -8,6 +8,8 @@ Libraries: `pip install -r requirements.txt`
 
 Database: SQLite3
 
+`.env` file with a discord bot API key 
+
 ## ROADMAP
 - Implement price change since open in all commands
 - Implement embeds' color change depending of whether change since open is positive or negative
