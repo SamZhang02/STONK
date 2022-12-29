@@ -28,7 +28,7 @@ async def on_ready() -> None:
         database.create_db()
     if notify.is_running():
         notify.cancel()
-        asyncio.sleep(5)
+        await asyncio.sleep(5)
     notify.start()
 
 @client.event
