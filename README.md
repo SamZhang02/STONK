@@ -4,7 +4,7 @@ Discord bot that allows for the retrieval of the stock market's information via 
 
 ## REQUIREMENTS
 
-Libraries: `pip install -r requirements. txt`
+Libraries: `pip install -r requirements.txt`
 
 Database: SQLite3
 
