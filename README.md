@@ -8,7 +8,15 @@ Libraries: `pip install -r requirements.txt`
 
 Database: SQLite3
 
-`.env` file with a discord bot API key 
+### To create you own instance:
+
+`.env` file with a Discord bot API key from the Discord Developper Portal to create your own discord bot instance.
+
+### To invite my instance of the bot to your server:
+
+Link: https://discord.com/oauth2/authorize?client_id=1048012729711087626&permissions=274877930560&scope=bot
+
+The bot is not currently being hosted anywhere yet, but will be very soon. 
 
 ## ROADMAP
 - Implement price change since open in all commands
