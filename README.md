@@ -1,7 +1,7 @@
 # STONK
 
 [![discord.py Library](https://img.shields.io/badge/discord.py-2.1.0-blue.svg)](https://github.com/Rapptz/discord.py)
-[![Python 3](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/)
+[![Python 3](https://img.shields.io/badge/python-3.10.9-blue.svg)](https://www.python.org/)
 
 Discord bot that allows for the retrieval of the stock market's information via user commands.
 
