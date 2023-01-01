@@ -22,7 +22,7 @@ async def run_command(message:discord.Message) -> None:
 
     elif todo == 'get':
         if len(content) != 3:
-            raise AssertionError('Please use the format stonk get <ticker>.')
+            raise AssertionError('Please use the format `stonk get <ticker>`.')
         
         ticker = content[2]
 

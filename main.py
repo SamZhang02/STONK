@@ -37,26 +37,22 @@ async def on_ready() -> None:
     next_close = daytime.get_next_close()
 
     notify_is_scheduled = False 
-    surprise_is_scheduled = False
 
     for job in scheduler.get_jobs():
         if job.name == 'notify':
             notify_is_scheduled = True
-        if job.name == 'surprise':
-            surprise_is_scheduled = True
 
     if not notify_is_scheduled:
         scheduler.add_job(notify, 'date', args=[scheduler],run_date = next_close)
-    if not surprise_is_scheduled:
-        scheduler.add_job(surprise, 'date', run_date = daytime.new_year())
-    scheduler.start()
-    
-    scheduler.print_jobs()
+        scheduler.start()
+
+    logging.info(scheduler.get_jobs())
     print(f'Next market notification scheduled for {next_close}')
     logging.info(f'Next market notification scheduled for {next_close}')
 
 @client.event
 async def on_resumed() -> None:
+    print('Resumed')
     logging.info(f'Resumed')
 
 @client.event
