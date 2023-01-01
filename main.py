@@ -43,7 +43,7 @@ async def on_ready() -> None:
             notify_is_scheduled = True
 
     if not notify_is_scheduled:
-        scheduler.add_job(notify, 'date', args=[scheduler],run_date = next_close)
+        scheduler.add_job(notify, 'date', args=[scheduler],run_date = next_close, misfire_grace_time=None)
         scheduler.start()
 
     logging.info(scheduler.get_jobs())
@@ -81,7 +81,7 @@ async def notify(scheduler) -> None:
             logging.error(e)
 
     next_close = daytime.get_next_close()
-    scheduler.add_job(notify, 'date', args=[scheduler],run_date = next_close)
+    scheduler.add_job(notify, 'date', args=[scheduler],run_date=next_close, misfire_grace_time=None)
 
     scheduler.print_jobs()
     print(f'Next market notification scheduled for {next_close}')
