@@ -11,9 +11,9 @@ async def run_command(message:discord.Message) -> None:
     if todo == 'help':
         embed=discord.Embed()
         embed.set_author(name="STONK", icon_url="https://i.imgur.com/rCHzZay.jpg")
-        embed.add_field(name="get <ticker>", value="Get current information of a stock or an index.", inline=False)
-        embed.add_field(name="market", value="Get current information of major indices of the US market.", inline=False)
-        embed.add_field(name="notify", value="Enable/Disable automatic market closure info every business day in the channel where the command was sent.", inline=False)
+        embed.add_field(name="`get <ticker>`", value="Get current information of a stock or an index.", inline=False)
+        embed.add_field(name="`market`", value="Get current information of major indices of the US market.", inline=False)
+        embed.add_field(name="`notify`", value="Enable/Disable automatic market closure info every business day in the channel where the command was sent.", inline=False)
 
         await message.channel.send(embed=embed)
 
@@ -29,7 +29,7 @@ async def run_command(message:discord.Message) -> None:
         try:
             stock = get_stock(ticker) 
             embed = stock.get_embed()
-            embed.set_footer(text=f'Requested by {message.author}.')
+            embed.set_footer(text=f'Requested by {message.author}.',icon_url=message.author.avatar)
             await message.channel.send(embed=embed)
 
         except Exception as e: 
@@ -39,7 +39,7 @@ async def run_command(message:discord.Message) -> None:
         try:
             indices = get_major_index('Market Right Now')
             embed = indices.get_embed()
-            embed.set_footer(text=f'Requested by {message.author}.')
+            embed.set_footer(text=f'Requested by {message.author}.',icon_url=message.author.avatar)
             await message.channel.send(embed=embed)
         except Exception as e: 
             raise AssertionError(f"{e}")

@@ -21,8 +21,5 @@ def get_next_close() -> datetime.datetime:
     output = next_close.to_pydatetime()
     return output
 
-def new_year() -> datetime.datetime:
-    return datetime.datetime(2023,1,1,0,0,0)
-
 if __name__ == "__main__":
     pass

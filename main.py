@@ -90,13 +90,5 @@ async def notify(scheduler) -> None:
     scheduler.print_jobs()
     print(f'Next market notification scheduled for {next_close}')
     logging.info(f'Next market notification scheduled for {next_close}')
-    
-async def surprise() -> None:
-    channels = [1038924910287917068,927282187424899072]
-    for x in channels:
-        channel = client.get_channel(x)
-        await channel.send("Hello, this is a scheduled message from Sam:\nHappy New Year.\n(If this did not send at midnight then Sam is dumb and can't code)")
-
-
 
 client.run(TOKEN) # type: ignore
