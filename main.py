@@ -1,17 +1,20 @@
-import discord
-from discord.ext import tasks 
-import os 
+import logging
+import os
 from pathlib import Path
-from dotenv import load_dotenv 
-from commands import run_command
-import database
-from daytime import get_minutes_until_next_close,today_date
-from market_info import get_major_index
-import asyncio
 
+import discord
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from dotenv import load_dotenv
+
+import database
+import daytime
+from commands import run_command
+from market_info import get_major_index
+
+logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
+logging.info('Logging starts here')
 
 #Get bot key from .env
-load_dotenv()
 env_path = Path('.')/'.env'
 load_dotenv(dotenv_path=env_path)
 TOKEN = os.getenv("TOKEN")
@@ -20,16 +23,41 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
+scheduler = AsyncIOScheduler(timezone='America/Toronto')
 
 @client.event
 async def on_ready() -> None:
     print(f'Logged in as {client.user}')
+    logging.info(f'Logged in as {client.user}')
     if not os.path.exists('database.db'):
         database.create_db()
-    if notify.is_running():
-        notify.cancel()
-        await asyncio.sleep(5)
-    notify.start()
+
+    # TODO: Check if there is currently a scheduler -> check if there are any expired jobs in scheduled jobs 
+
+    next_close = daytime.get_next_close()
+
+    notify_is_scheduled = False 
+    surprise_is_scheduled = False
+
+    for job in scheduler.get_jobs():
+        if job.name == 'notify':
+            notify_is_scheduled = True
+        if job.name == 'surprise':
+            surprise_is_scheduled = True
+
+    if not notify_is_scheduled:
+        scheduler.add_job(notify, 'date', args=[scheduler],run_date = next_close)
+    if not surprise_is_scheduled:
+        scheduler.add_job(surprise, 'date', run_date = daytime.new_year())
+    scheduler.start()
+    
+    scheduler.print_jobs()
+    print(f'Next market notification scheduled for {next_close}')
+    logging.info(f'Next market notification scheduled for {next_close}')
+
+@client.event
+async def on_resumed() -> None:
+    logging.info(f'Resumed')
 
 @client.event
 async def on_message(message:discord.Message) -> None:
@@ -44,19 +72,31 @@ async def on_message(message:discord.Message) -> None:
             await message.add_reaction('❌')
             await message.channel.send(e)
 
-@tasks.loop(seconds=get_minutes_until_next_close())
-async def notify() -> None:
-    if notify.current_loop != 0:
-        channels = database.get_channels_to_notify()
-        market = get_major_index(f'Market Close - {today_date()}')
-        for channel_id in channels:
-            channel = client.get_channel(channel_id)
-            try:
-                await channel.send(embed=market.get_embed())
-            except Exception as e:
-                fobj = open('errors.txt', 'a')
-                fobj.write(str(e))
-                fobj.close()
-        notify.change_interval(seconds=get_minutes_until_next_close())
+async def notify(scheduler) -> None:
+    channels = database.get_channels_to_notify()
+    logging.info(channels)
+    market = get_major_index(f'Market Close - {daytime.today_date()}') 
+    logging.info(market.quotes)
+    for channel_id in channels:
+        channel = client.get_channel(channel_id)
+        try:
+            await channel.send(embed=market.get_embed())
+        except Exception as e:
+            logging.error(e)
+
+    next_close = daytime.get_next_close()
+    scheduler.add_job(notify, 'date', args=[scheduler],run_date = next_close)
+
+    scheduler.print_jobs()
+    print(f'Next market notification scheduled for {next_close}')
+    logging.info(f'Next market notification scheduled for {next_close}')
+    
+async def surprise() -> None:
+    channels = [1038924910287917068,927282187424899072]
+    for x in channels:
+        channel = client.get_channel(x)
+        await channel.send("Hello, this is a scheduled message from Sam:\nHappy New Year.\n(If this did not send at midnight then Sam is dumb and can't code)")
+
+
 
 client.run(TOKEN) # type: ignore

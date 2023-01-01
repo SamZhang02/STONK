@@ -1,11 +1,13 @@
-import pandas as pd 
-import pandas_market_calendars as mcal
 import datetime
+
+import pandas as pd
+import pandas_market_calendars as mcal
+
 
 def today_date() -> str:
     return str(datetime.datetime.today()).split(' ')[0]
-    
-def get_minutes_until_next_close() -> int:
+
+def get_next_close() -> datetime.datetime:
     end = str(datetime.datetime.today() + datetime.timedelta(days=10)).split(' ')[0]
     # Create a calendar
     nyse = mcal.get_calendar('NYSE')
@@ -16,8 +18,11 @@ def get_minutes_until_next_close() -> int:
         next_close = mcal.date_range(interval, frequency = '1D')[0] 
     else:
         next_close = mcal.date_range(interval, frequency = '1D')[1] 
-    time_until_next_close = next_close-current_time
-    return time_until_next_close.total_seconds()
+    output = next_close.to_pydatetime()
+    return output
+
+def new_year() -> datetime.datetime:
+    return datetime.datetime(2023,1,1,0,0,0)
 
 if __name__ == "__main__":
     pass
