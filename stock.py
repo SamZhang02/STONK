@@ -7,23 +7,27 @@ class Quote:
         self.price = '%.2f' % price 
 
 class Equity(Quote):
-    def __init__(self, symbol:str, name:str, price:int, currency:str) -> None:
+    def __init__(self, symbol:str, name:str, price:int, currency:str,logo:str) -> None:
         super().__init__(symbol, name, price)
         self.currency = currency
+        self.logo = logo
     
     def get_embed(self) -> discord.Embed:
         embedVar = discord.Embed(title=self.name, description=self.symbol, color=0xd4f1f4)
         embedVar.add_field(name="Price", value=f'{self.price} {self.currency}', inline=False)
+        embedVar.set_thumbnail(url=self.logo)
         return embedVar
 
 class Index(Quote):
-    def __init__(self, symbol:str, name:str, price:int) -> None:
+    def __init__(self, symbol:str, name:str, price:int,logo:str) -> None:
         super().__init__(symbol,name,price)
         self.currency = 'px' 
+        self.logo = logo
 
     def get_embed(self) -> discord.Embed:
         embedVar = discord.Embed(title=self.name, description=self.symbol, color=0xd4f1f4)
         embedVar.add_field(name="Index", value=f'{self.price} {self.currency}', inline=False)
+        embedVar.set_thumbnail(url=self.logo)
         return embedVar
     
 class MultipleQuotes:

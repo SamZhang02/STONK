@@ -28,14 +28,19 @@ async def run_command(message:discord.Message) -> None:
 
         try:
             stock = get_stock(ticker) 
-            await message.channel.send(embed=stock.get_embed())
+            embed = stock.get_embed()
+            embed.set_footer(text=f'Requested by {message.author}.')
+            await message.channel.send(embed=embed)
+
         except Exception as e: 
             raise AssertionError(f"{e}")
 
     elif todo == 'market':
         try:
             indices = get_major_index('Market Right Now')
-            await message.channel.send(embed=indices.get_embed())
+            embed = indices.get_embed()
+            embed.set_footer(text=f'Requested by {message.author}.')
+            await message.channel.send(embed=embed)
         except Exception as e: 
             raise AssertionError(f"{e}")
 

@@ -16,6 +16,7 @@ def get_stock_info(stock_name:str) -> dict:
         name = info['longName'] if 'longName' in info else info['shortName']
         price = info['regularMarketPrice']
         currency = info['currency'] if quote_type != 'INDEX' else None
+        logo = info['logo_url']
 
         return {
             'status':'OK',
@@ -23,7 +24,8 @@ def get_stock_info(stock_name:str) -> dict:
             'name' :name,
             'price': price,
             'currency': currency,
-            'quoteType': quote_type
+            'quoteType': quote_type,
+            'logo': logo
         }
 
     except Exception as e:
@@ -41,14 +43,16 @@ def get_stock(stock_name:str) -> Quote:
         stock = Index(
             stock_info['symbol'], 
             stock_info['name'], 
-            stock_info['price']
+            stock_info['price'],
+            stock_info['logo']
         )
     else:
         stock = Equity(
             stock_info['symbol'],
             stock_info['name'],
             stock_info['price'], 
-            stock_info['currency']
+            stock_info['currency'],
+            stock_info['logo']
         )
     return stock
 
