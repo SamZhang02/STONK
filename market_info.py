@@ -4,10 +4,11 @@ from stock import Quote, Equity, Index, MultipleQuotes
 def get_stock_info(stock_name:str) -> dict:
     stock = yf.Ticker(stock_name)
     info = stock.info
-    if info['regularMarketPrice'] is None:
+
+    if info is None:
         return {
             'status': 'ERROR',
-            'message': 'There is no currently available price for one or more tickers requested.' 
+            'message': f'`{stock_name.upper()}`: No summary info found, symbol may be delisted.' 
         }
 
     try:
@@ -64,4 +65,5 @@ def get_major_index(title:str) -> MultipleQuotes:
     return MultipleQuotes(title,[sp500, dji, nasdaq, ndx])
 
 if __name__ == "__main__":
+    print(get_stock_info('erwer'))
     pass

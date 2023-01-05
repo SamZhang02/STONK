@@ -11,7 +11,7 @@ import daytime
 from commands import run_command
 from market_info import get_major_index
 
-logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
+logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG, format = '%(asctime)s %(levelname)-8s %(message)s')
 logging.info('Logging starts here')
 
 #Get bot key from .env
@@ -29,25 +29,26 @@ scheduler = AsyncIOScheduler(timezone='America/Toronto')
 async def on_ready() -> None:
     print(f'Logged in as {client.user}')
     logging.info(f'Logged in as {client.user}')
+
     if not os.path.exists('database.db'):
         database.create_db()
 
-    # TODO: Check if there is currently a scheduler -> check if there are any expired jobs in scheduled jobs 
-
     next_close = daytime.get_next_close()
-
     notify_is_scheduled = False 
 
     for job in scheduler.get_jobs():
         if job.name == 'notify':
             notify_is_scheduled = True
+        if job.name == 'wake':
+            scheduler.remove_job(job.id)
+
+    scheduler.add_job(wake, 'interval', hours=1)
 
     if not notify_is_scheduled:
         scheduler.add_job(notify, 'date', args=[scheduler],run_date = next_close, misfire_grace_time=None)
         scheduler.start()
 
     logging.info(scheduler.get_jobs())
-    print(f'Next market notification scheduled for {next_close}')
     logging.info(f'Next market notification scheduled for {next_close}')
 
 @client.event
@@ -69,22 +70,28 @@ async def on_message(message:discord.Message) -> None:
             await message.channel.send(e)
 
 async def notify(scheduler) -> None:
+    next_close = daytime.get_next_close()
+    print(f'Next market notification scheduled for {next_close}')
+    logging.info(f'Next market notification scheduled for {next_close}')
+
     channels = database.get_channels_to_notify()
     logging.info(channels)
+
     market = get_major_index(f'Market Close - {daytime.today_date()}') 
     logging.info(market.quotes)
+
     for channel_id in channels:
         channel = client.get_channel(channel_id)
         try:
             await channel.send(embed=market.get_embed())
         except Exception as e:
+            await channel.send('Attempted but failed to send market info')
             logging.error(e)
 
-    next_close = daytime.get_next_close()
     scheduler.add_job(notify, 'date', args=[scheduler],run_date=next_close, misfire_grace_time=None)
 
-    scheduler.print_jobs()
-    print(f'Next market notification scheduled for {next_close}')
-    logging.info(f'Next market notification scheduled for {next_close}')
+async def wake() -> None:
+    logging.info(scheduler.get_jobs())
 
 client.run(TOKEN) # type: ignore
+
