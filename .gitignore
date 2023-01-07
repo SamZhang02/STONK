@@ -3,4 +3,4 @@ __pycache__
 venv
 .vscode
 database.db
-example.log
+info.log

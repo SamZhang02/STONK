@@ -65,5 +65,4 @@ def get_major_index(title:str) -> MultipleQuotes:
     return MultipleQuotes(title,[sp500, dji, nasdaq, ndx])
 
 if __name__ == "__main__":
-    print(get_stock_info('erwer'))
     pass

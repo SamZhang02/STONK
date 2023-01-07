@@ -11,7 +11,7 @@ class Equity(Quote):
         super().__init__(symbol, name, price)
         self.currency = currency
         self.logo = logo
-    
+
     def get_embed(self) -> discord.Embed:
         embedVar = discord.Embed(title=self.name, description=self.symbol, color=0xd4f1f4)
         embedVar.add_field(name="Price", value=f'{self.price} {self.currency}', inline=False)

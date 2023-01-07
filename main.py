@@ -11,7 +11,7 @@ import daytime
 from commands import run_command
 from market_info import get_major_index
 
-logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG, format = '%(asctime)s %(levelname)-8s %(message)s')
+logging.basicConfig(filename='info.log', encoding='utf-8', level=logging.DEBUG, format = '%(asctime)s %(levelname)-8s %(message)s')
 logging.info('Logging starts here')
 
 #Get bot key from .env
@@ -30,26 +30,7 @@ async def on_ready() -> None:
     print(f'Logged in as {client.user}')
     logging.info(f'Logged in as {client.user}')
 
-    if not os.path.exists('database.db'):
-        database.create_db()
-
-    next_close = daytime.get_next_close()
-    notify_is_scheduled = False 
-
-    for job in scheduler.get_jobs():
-        if job.name == 'notify':
-            notify_is_scheduled = True
-        if job.name == 'wake':
-            scheduler.remove_job(job.id)
-
-    scheduler.add_job(wake, 'interval', hours=1)
-
-    if not notify_is_scheduled:
-        scheduler.add_job(notify, 'date', args=[scheduler],run_date = next_close, misfire_grace_time=None)
-        scheduler.start()
-
-    logging.info(scheduler.get_jobs())
-    logging.info(f'Next market notification scheduled for {next_close}')
+    initialize(scheduler)
 
 @client.event
 async def on_resumed() -> None:
@@ -92,6 +73,28 @@ async def notify(scheduler) -> None:
 
 async def wake() -> None:
     logging.info(scheduler.get_jobs())
+
+def initialize(scheduler) -> None:
+    if not os.path.exists('database.db'):
+        database.create_db()
+
+    next_close = daytime.get_next_close()
+    notify_is_scheduled = False 
+
+    for job in scheduler.get_jobs():
+        if job.name == 'notify':
+            notify_is_scheduled = True
+        if job.name == 'wake':
+            scheduler.remove_job(job.id)
+
+    scheduler.add_job(wake, 'interval', hours=1)
+
+    if not notify_is_scheduled:
+        scheduler.add_job(notify, 'date', args=[scheduler],run_date = next_close, misfire_grace_time=None)
+        scheduler.start()
+
+    logging.info(scheduler.get_jobs())
+    logging.info(f'Next market notification scheduled for {next_close}')
 
 client.run(TOKEN) # type: ignore
 
