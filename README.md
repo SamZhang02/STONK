@@ -59,7 +59,7 @@ Enable/disable daily automatic market update on major indices of the U.S. stock 
   <img src="https://user-images.githubusercontent.com/112342947/209816417-912bdbe5-b2fa-4734-9c74-7e96ee9eec89.png">
 </p>
 
-## CREDITS##
+## CREDITS
 The underlying API wrapper for the discord bot is [discord.py](https://github.com/Rapptz/discord.py).
 
 Most of the stock market's information are retrieved using the [yfinance](https://github.com/ranaroussi/yfinance) library. 
