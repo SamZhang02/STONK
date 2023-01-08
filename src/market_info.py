@@ -1,7 +1,6 @@
 import yfinance as yf
 from stock import Quote, Equity, Index, MultipleQuotes
 import pandas as pd
-import matplotlib.pyplot as plt
 import mplfinance as mpf
 
 def get_stock_info(stock_name:str) -> dict:
@@ -79,7 +78,7 @@ def get_graph(data:pd.DataFrame, stock:Quote) -> None:
     fig, axes = mpf.plot(data,
     type='candle', 
     mav=(3), 
-    # volume=True,
+    volume=True,
     returnfig=True,
     ylabel=f'Price ({stock.currency})',
     style='yahoo',
