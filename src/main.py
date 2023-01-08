@@ -75,7 +75,7 @@ async def wake() -> None:
     logging.info(scheduler.get_jobs())
 
 def initialize(scheduler) -> None:
-    if not os.path.exists('database.db'):
+    if not os.path.exists('../database/database.db'):
         database.create_db()
 
     next_close = daytime.get_next_close()
