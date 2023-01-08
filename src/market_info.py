@@ -1,5 +1,8 @@
 import yfinance as yf
 from stock import Quote, Equity, Index, MultipleQuotes
+import pandas as pd
+import matplotlib.pyplot as plt
+import mplfinance as mpf
 
 def get_stock_info(stock_name:str) -> dict:
     stock = yf.Ticker(stock_name)
@@ -63,6 +66,27 @@ def get_major_index(title:str) -> MultipleQuotes:
     nasdaq = get_stock('^IXIC')
     ndx = get_stock('^NDX')
     return MultipleQuotes(title,[sp500, dji, nasdaq, ndx])
+
+def get_history(stock_name:str, period:str) -> pd.DataFrame:
+    if period not in ['5d','1mo','3mo','6mo','1y','2y','5y','ytd']:
+        raise AssertionError('Invalid historical period.')
+
+    stock = yf.Ticker(stock_name)
+    hist = stock.history(period=period)
+    return hist
+
+def get_graph(data:pd.DataFrame, stock:Quote) -> None:
+    fig, axes = mpf.plot(data,
+    type='candle', 
+    mav=(3), 
+    # volume=True,
+    returnfig=True,
+    ylabel=f'Price ({stock.currency})',
+    style='yahoo',
+    warn_too_much_data=1825)
+
+    axes[0].set_title(stock.symbol)
+    fig.savefig(fname="../media/graph.png", bbox_inches="tight")
 
 if __name__ == "__main__":
     pass

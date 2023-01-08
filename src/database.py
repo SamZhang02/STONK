@@ -1,7 +1,7 @@
 import sqlite3
 
 def create_db() -> None:
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('../database/database.db')
     cursor = conn.cursor()
 
     cursor.execute("CREATE TABLE IF NOT EXISTS notify(channel_id INTEGER PRIMARY KEY,to_notify INTEGER DEFAULT 0);")
@@ -10,7 +10,7 @@ def create_db() -> None:
     conn.close()
 
 def change_notify_status(channel:int) -> bool:
-    conn = sqlite3.connect('./database.db')
+    conn = sqlite3.connect('../database/database.db')
     cursor = conn.cursor()
 
     query = 'SELECT * FROM notify WHERE channel_id IN (?)'
@@ -35,7 +35,7 @@ def change_notify_status(channel:int) -> bool:
     return is_enabled
 
 def get_channels_to_notify() -> list[int]:
-    conn = sqlite3.connect('./database.db')
+    conn = sqlite3.connect('../database/database.db')
     cursor = conn.cursor()
 
     query = 'SELECT channel_id FROM notify WHERE to_notify = 1'
