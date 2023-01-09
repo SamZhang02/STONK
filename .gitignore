@@ -4,3 +4,4 @@ venv
 .vscode
 database.db
 info.log
+nohup.out
