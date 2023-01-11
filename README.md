@@ -17,7 +17,7 @@ Database: SQLite3
 
 ### To invite my instance of the bot to your server:
 
-Link: https://discord.com/oauth2/authorize?client_id=1048012729711087626&permissions=274877930560&scope=bot
+Link: https://discordapp.com/oauth2/authorize?&client_id=1048012729711087626&scope=bot
 
 ## ROADMAP
 - Implement price change since open in all commands
