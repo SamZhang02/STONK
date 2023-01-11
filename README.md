@@ -31,7 +31,8 @@ All commands start with the prefix `stonk` (Caps sensitive)
 Retrieve all possible bot commands.
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/112342947/209816158-cea4084c-4f61-4f24-bcc4-4f82b1ca8116.png">
+<img src=https://user-images.githubusercontent.com/112342947/211911255-c7081ddd-8bab-4a61-aba7-6ee8432573a6.png>
+
 </p>
 
 ## CREDITS
