@@ -1,4 +1,5 @@
 # STONK
+UPDATE Jan 13 2023: The bot is currently [broken](https://github.com/SamZhang02/STONK/issues/1), for specifics, please view the linked issue. 
 
 [![discord.py Library](https://img.shields.io/badge/discord.py-2.1.0-blue.svg)](https://github.com/Rapptz/discord.py)
 [![Python 3](https://img.shields.io/badge/python-3.10.9-blue.svg)](https://www.python.org/)
