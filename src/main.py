@@ -48,7 +48,8 @@ async def on_message(message:discord.Message) -> None:
             await message.add_reaction('✅')
         except Exception as e:
             await message.add_reaction('❌')
-            await message.channel.send(e)
+            await message.channel.send(f"Attempted but failed to fulfill request. Error message: {e}")
+            logging.error(e)
 
 async def notify(scheduler) -> None:
     next_close = daytime.get_next_close()
@@ -56,20 +57,30 @@ async def notify(scheduler) -> None:
     logging.info(f'Next market notification scheduled for {next_close}')
 
     channels = database.get_channels_to_notify()
-    logging.info(channels)
-
-    market = get_major_index(f'Market Close - {daytime.today_date()}') 
-    logging.info(market.quotes)
-
+    to_send = []
     for channel_id in channels:
+        logging.info(channel_id)
         channel = client.get_channel(channel_id)
-        try:
-            await channel.send(embed=market.get_embed())
-        except Exception as e:
-            await channel.send('Attempted but failed to send market info')
-            logging.error(e)
+        if channel:
+            to_send.append(channel)
+    logging.info(to_send)
 
-    scheduler.add_job(notify, 'date', args=[scheduler],run_date=next_close, misfire_grace_time=None)
+    try:
+        market = get_major_index(f'Market Close - {daytime.today_date()}') 
+        logging.info(market.quotes)
+        for channel_to_send in to_send:
+            await channel_to_send.send(embed=market.get_embed())
+
+    except Exception as e:
+        logging.error(e)
+        for channel_to_send in to_send:
+            await channel_to_send.send(f'Attempted but failed to send market info.')
+
+    finally:
+        scheduler.add_job(notify, 'date', args=[scheduler],run_date=next_close, misfire_grace_time=None)
+        logging.info(scheduler.get_jobs())
+
+
 
 async def wake() -> None:
     logging.info(scheduler.get_jobs())

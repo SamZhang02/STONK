@@ -88,4 +88,5 @@ def get_graph(data:pd.DataFrame, stock:Quote) -> None:
     fig.savefig(fname="../media/graph.png", bbox_inches="tight")
 
 if __name__ == "__main__":
+    print(get_stock_info("^GSPC"))
     pass
