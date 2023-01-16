@@ -5,6 +5,8 @@
 
 Discord bot that allows for the retrieval of the stock market's information via user commands.
 
+https://user-images.githubusercontent.com/112342947/212703080-810c866b-6e16-4de1-b878-b5605a3abf5e.mp4
+
 ## REQUIREMENTS
 
 Libraries: `pip install -r requirements.txt`
@@ -32,7 +34,6 @@ Retrieve all possible bot commands.
 
 <p align="center">
 <img src=https://user-images.githubusercontent.com/112342947/211911255-c7081ddd-8bab-4a61-aba7-6ee8432573a6.png>
-
 </p>
 
 ## CREDITS
