@@ -6,6 +6,7 @@ import mplfinance as mpf
 def get_stock_info(stock_name:str) -> dict:
     stock = yf.Ticker(stock_name)
     info = stock.info
+    basic_info = stock.fast_info
 
     if info is None:
         return {
@@ -14,27 +15,36 @@ def get_stock_info(stock_name:str) -> dict:
         }
 
     try:
-        symbol = info['symbol']
         quote_type = info['quoteType']
         name = info['longName'] if 'longName' in info else info['shortName']
-        price = info['regularMarketPrice']
-        currency = info['currency'] if quote_type != 'INDEX' else None
         logo = info['logo_url']
-
-        return {
-            'status':'OK',
-            'symbol':symbol,
-            'name' :name,
-            'price': price,
-            'currency': currency,
-            'quoteType': quote_type,
-            'logo': logo
-        }
 
     except Exception as e:
         return {
             'status': 'ERROR',
             'message': 'Unknown error, ticker information could not be retrieved'
+            }
+
+    try:
+        price = basic_info['last_price']
+        currency = basic_info['currency'] if quote_type != 'INDEX' else None
+        last_close = basic_info['regular_market_previous_close']
+
+    except Exception as e:
+        return {
+            'status': 'ERROR',
+            'message': 'Unknown error, ticker information could not be retrieved'
+            }
+
+    return {
+            'status':'OK',
+            'symbol':stock_name.upper(),
+            'name': name,
+            'price':price, 
+            'last_close':last_close,
+            'currency': currency,
+            'quoteType': quote_type,
+            'logo': logo 
             }
 
 def get_stock(stock_name:str) -> Quote:
@@ -88,5 +98,4 @@ def get_graph(data:pd.DataFrame, stock:Quote) -> None:
     fig.savefig(fname="../media/graph.png", bbox_inches="tight")
 
 if __name__ == "__main__":
-    print(get_stock_info("^GSPC"))
     pass
