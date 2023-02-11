@@ -98,4 +98,7 @@ def get_graph(data:pd.DataFrame, stock:Quote) -> None:
     fig.savefig(fname="../media/graph.png", bbox_inches="tight")
 
 if __name__ == "__main__":
+    stock = yf.Ticker('^GSPC')
+    basic_info = stock.fast_info
+    print(basic_info.regular_market_previous_close)
     pass

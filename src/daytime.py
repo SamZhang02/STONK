@@ -1,8 +1,8 @@
 import datetime
+import pytz
 
 import pandas as pd
 import pandas_market_calendars as mcal
-
 
 def today_date() -> str:
     return str(datetime.datetime.today()).split(' ')[0]
@@ -20,6 +20,9 @@ def get_next_close() -> datetime.datetime:
         next_close = mcal.date_range(interval, frequency = '1D')[1] 
     output = next_close.to_pydatetime()
     return output
+
+def get_valentines_day() -> datetime.datetime:
+    return datetime.datetime(2023,2,14,0,0,0,tzinfo=pytz.timezone("EST"))
 
 if __name__ == "__main__":
     pass

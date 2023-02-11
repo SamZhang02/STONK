@@ -31,6 +31,8 @@ async def on_ready() -> None:
     logging.info(f'Logged in as {client.user}')
 
     initialize(scheduler)
+    scheduler.add_job(easter_egg, "date",run_date = daytime.get_valentines_day(), misfire_grace_time=None)
+    logging.info(scheduler.get_jobs())
 
 @client.event
 async def on_resumed() -> None:
@@ -53,7 +55,6 @@ async def on_message(message:discord.Message) -> None:
 
 async def notify(scheduler) -> None:
     next_close = daytime.get_next_close()
-    print(f'Next market notification scheduled for {next_close}')
     logging.info(f'Next market notification scheduled for {next_close}')
 
     channels = database.get_channels_to_notify()
@@ -80,7 +81,16 @@ async def notify(scheduler) -> None:
         scheduler.add_job(notify, 'date', args=[scheduler],run_date=next_close, misfire_grace_time=None)
         logging.info(scheduler.get_jobs())
 
-
+async def easter_egg() -> None:
+    to_send = [1073934799611383900,1038924910287917068,927282187424899072,1055555751764045884,800563473968136215]
+    for channel_id in to_send:
+        try:
+            channel = client.get_channel(channel_id)
+            await channel.send("Happy Valentines day, here is a reminder to touch grass.")
+            await channel.send("https://tenor.com/view/kid-touch-grass-gif-24659299")
+            await channel.send("- Sam")
+        except Exception as e:
+            logging.error(e)
 
 async def wake() -> None:
     logging.info(scheduler.get_jobs())
